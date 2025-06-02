@@ -6,15 +6,19 @@
 class Sphere : public Hittable
 {
 public:
-	Sphere(const Point3& center, double radius, shared_ptr<Material> material) : 
-		m_center(center), 
-		m_radius(std::fmax(radius, 0)),
-		m_material(material) {}
-	bool  m_hit(const Ray& r, Interval rayInterval, HitRecord& record) const override;
+	//Stationary Sphere
+	Sphere(const Point3& staticCenter, double radius, shared_ptr<Material> material);
+
+	//Moving Sphere
+	Sphere(const Point3& center1, const Point3& center2, double radius, shared_ptr<Material> material);
+
+	bool m_hit(const Ray& r, Interval rayInterval, HitRecord& record) const override;
+	AxisAlignedBoundingBox m_getBoundingBox() const override;
 private:
-	Point3 m_center;
+	Ray m_center;
 	double m_radius;
 	shared_ptr<Material> m_material;
+	AxisAlignedBoundingBox m_boundingBox;
 };
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include "AxisAlignedBoundingBox.h"
+
 //Including Material.h here would cause circular include dependency problem, which can result in bad undefined behaviour
 //depending upon the compiler used. This is because, this header (Hittable.h) is already included in Material.h.
 //To avoid this, we will do forward declaration of Material class.
@@ -28,6 +30,7 @@ class Hittable
 public:
 	virtual ~Hittable() = default;
 	virtual bool m_hit(const Ray& r, Interval rayInterval, HitRecord& record) const = 0;
+	virtual AxisAlignedBoundingBox m_getBoundingBox() const = 0;
 };
 
 #endif

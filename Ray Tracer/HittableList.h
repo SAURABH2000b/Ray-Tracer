@@ -16,6 +16,11 @@ public:
 	void m_add(shared_ptr<Hittable> object);
 
 	bool m_hit(const Ray& r, Interval rayInterval, HitRecord& record) const override;
+
+	AxisAlignedBoundingBox m_getBoundingBox() const override;
+
+private:
+	AxisAlignedBoundingBox m_boundingBox;
 };
 
 #endif

@@ -36,6 +36,11 @@ inline double g_randomDouble(double min, double max) {
 	return min + (max - min)*g_randomDouble();
 }
 
+inline int g_randomInt(int min, int max) {
+	//Returns a random integer in [min, max]
+	return int(g_randomDouble(min, max + 1));
+}
+
 //Common headers:
 #include "Color.h"
 #include "Interval.h"

@@ -14,6 +14,7 @@ void HittableList::m_clear()
 void HittableList::m_add(shared_ptr<Hittable> object)
 {
 	m_objects.push_back(object);
+	m_boundingBox = AxisAlignedBoundingBox(m_boundingBox, object->m_getBoundingBox());
 }
 
 
@@ -32,4 +33,9 @@ bool HittableList::m_hit(const Ray& r, Interval rayInterval, HitRecord& record) 
 	}
 
 	return hitAnything;
+}
+
+AxisAlignedBoundingBox HittableList::m_getBoundingBox() const
+{
+	return m_boundingBox;
 }

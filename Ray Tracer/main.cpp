@@ -1,5 +1,7 @@
 #include "Utility.h"
 
+#include "BoundingVolumeHierarchyNode.h"
+
 #include "OutputSettings.h"
 #include "Camera.h"
 
@@ -9,7 +11,7 @@
 int main() {
 
 	//Output Settings:
-	OutputSettings setting1(16.0 / 9.0, 400, 500, 50);
+	OutputSettings setting1(16.0 / 9.0, 400, 100, 50);
 
 	//Camera:
 	Point3 lookAt(0.0, 0.0, 0.0);
@@ -29,15 +31,15 @@ int main() {
 
 			if ((center - Point3(4, 0.2, 0)).m_length() > 0.9) {
 				shared_ptr<Material> sphereMaterial;
-				if (chooseMat < 0.8) {
+				if (chooseMat < 0.4) {
 					//Diffuse
 					auto albedo = Color::s_random() * Color::s_random();
 					sphereMaterial = make_shared<Lambertian>(albedo, 0.98);
 				}
-				else if (chooseMat < 0.95) {
+				else if (chooseMat < 0.65) {
 					//Metal
 					auto albedo = Color::s_random();
-					auto fuzz = g_randomDouble(0, 0.5);
+					auto fuzz = g_randomDouble(0, 0.3);
 					sphereMaterial = make_shared<Metal>(albedo, fuzz);
 				}
 				else {
@@ -46,7 +48,8 @@ int main() {
 					auto fuzz = g_randomDouble(0, 0.5);
 					sphereMaterial = make_shared<Dielectric>(1.5, albedo, fuzz, 1.0);
 				}
-				world.m_add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+				auto center2 = center + Vec3(0, g_randomDouble(0, 0.5), 0);
+				world.m_add(make_shared<Sphere>(center, center2, 0.2, sphereMaterial));
 			}
 		}
 	}
@@ -59,6 +62,8 @@ int main() {
 
 	auto material3 = make_shared<Dielectric>(1.5, Color(0.8, 0.1, 0.1), 0.3, 1.0);
 	world.m_add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+
+	world = HittableList(make_shared<BoundingVolumeHierarchyNode>(world)); //Wrapping all the hittables into bounded volume hierarchy.
 
 	camera1.m_render(world);
 	return 0;

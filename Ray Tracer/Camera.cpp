@@ -391,7 +391,9 @@ Ray Camera::m_getRay(int i, int j) const
     auto rayOrigin = (m_defocusAngle <-0) ? m_cameraCenter : m_defocusDiskSample();
     auto rayDirection = pixelSample - rayOrigin;
 
-    return Ray(rayOrigin, rayDirection);
+    auto rayTime = g_randomDouble();
+
+    return Ray(rayOrigin, rayDirection, rayTime);
 }
 
 Color Camera::m_rayColor(const Ray& r, int bouncesLeft, const Hittable& object) const

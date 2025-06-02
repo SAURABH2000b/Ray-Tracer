@@ -24,7 +24,7 @@ bool Lambertian::m_scatter(const Ray& inputRay, const HitRecord& record, Color& 
 	if (scatterDirection.m_nearZero())
 		scatterDirection = record.m_normal;
 
-	scatteredRay = Ray(record.m_point, scatterDirection);
+	scatteredRay = Ray(record.m_point, scatterDirection, inputRay.m_getTime());
 	attenuation = m_albedo / m_scatteringProbability;
 	return true;
 
@@ -39,7 +39,7 @@ bool Metal::m_scatter(const Ray& inputRay, const HitRecord& record, Color& atten
 	reflectedDirection = g_unitVector(reflectedDirection) + (m_fuzz * g_randomUnitVector());
 	if (g_dot(reflectedDirection, record.m_normal) < 0)
 		return false;
-	scatteredRay = Ray(record.m_point, reflectedDirection);
+	scatteredRay = Ray(record.m_point, reflectedDirection, inputRay.m_getTime());
 	attenuation = m_albedo;
 	return true;
 
@@ -52,7 +52,7 @@ bool Dielectric::m_scatter(const Ray& inputRay, const HitRecord& record, Color& 
 		reflectedDirection = g_unitVector(reflectedDirection) + (m_fuzz * g_randomUnitVector());
 		if (g_dot(reflectedDirection, record.m_normal) < 0)
 			return false;
-		scatteredRay = Ray(record.m_point, reflectedDirection);
+		scatteredRay = Ray(record.m_point, reflectedDirection, inputRay.m_getTime());
 		attenuation = m_albedo;
 		return true;
 	}
@@ -74,7 +74,7 @@ bool Dielectric::m_scatter(const Ray& inputRay, const HitRecord& record, Color& 
 		else
 			scatteredDirection = g_refract(unitDirection, record.m_normal, refractiveIndex);
 
-		scatteredRay = Ray(record.m_point, scatteredDirection);
+		scatteredRay = Ray(record.m_point, scatteredDirection, inputRay.m_getTime());
 		return true;
 	} 
 }
