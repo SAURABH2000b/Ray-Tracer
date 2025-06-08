@@ -6,7 +6,7 @@ bool UniformMatte::m_scatter(const Ray& inputRay, const HitRecord& record, Color
 
 	Vec3 scatterDirection = g_randomOnHemisphere(record.m_normal);
 	scatteredRay = Ray(record.m_point, scatterDirection);
-	attenuation = m_albedo;
+	attenuation = m_texture->m_value(record.m_u, record.m_v, record.m_point);
 	return true;
 
 }
@@ -25,7 +25,7 @@ bool Lambertian::m_scatter(const Ray& inputRay, const HitRecord& record, Color& 
 		scatterDirection = record.m_normal;
 
 	scatteredRay = Ray(record.m_point, scatterDirection, inputRay.m_getTime());
-	attenuation = m_albedo / m_scatteringProbability;
+	attenuation = m_texture->m_value(record.m_u, record.m_v, record.m_point) / m_scatteringProbability;
 	return true;
 
 }
@@ -40,7 +40,7 @@ bool Metal::m_scatter(const Ray& inputRay, const HitRecord& record, Color& atten
 	if (g_dot(reflectedDirection, record.m_normal) < 0)
 		return false;
 	scatteredRay = Ray(record.m_point, reflectedDirection, inputRay.m_getTime());
-	attenuation = m_albedo;
+	attenuation = m_texture->m_value(record.m_u, record.m_v, record.m_point);
 	return true;
 
 }
@@ -53,12 +53,12 @@ bool Dielectric::m_scatter(const Ray& inputRay, const HitRecord& record, Color& 
 		if (g_dot(reflectedDirection, record.m_normal) < 0)
 			return false;
 		scatteredRay = Ray(record.m_point, reflectedDirection, inputRay.m_getTime());
-		attenuation = m_albedo;
+		attenuation = m_texture->m_value(record.m_u, record.m_v, record.m_point);
 		return true;
 	}
 	//Input ray is refracted
 	else {
-		attenuation = Color(1.0, 1.0, 1.0);
+		attenuation = Color(1.0, 1.0, 1.0)*m_refractionProbability + m_texture->m_value(record.m_u, record.m_v, record.m_point) * (1 - m_refractionProbability);
 		double refractiveIndex = record.m_frontFace ? (1.0 / m_refractionIndex) : m_refractionIndex;
 		Vec3 unitDirection = g_unitVector(inputRay.m_getDirection());
 

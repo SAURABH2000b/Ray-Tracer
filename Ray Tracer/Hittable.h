@@ -14,7 +14,9 @@ public:
 	Point3 m_point;
 	Vec3 m_normal;
 	shared_ptr<Material> m_material;
-	double m_t;
+	double m_t; //Ray parameter at hit point.
+	double m_u; //u texture coordinate at hit point.
+	double m_v; //v texture coordinate at hit point.
 	bool m_frontFace;
 
 	

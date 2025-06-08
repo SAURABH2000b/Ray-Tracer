@@ -15,6 +15,8 @@ public:
 	bool m_hit(const Ray& r, Interval rayInterval, HitRecord& record) const override;
 	AxisAlignedBoundingBox m_getBoundingBox() const override;
 private:
+	static void s_getSphereUV(const Point3& p, double& u, double& v);
+
 	Ray m_center;
 	double m_radius;
 	shared_ptr<Material> m_material;
